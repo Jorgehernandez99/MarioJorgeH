@@ -18,14 +18,25 @@ game.PlayerEntity = me.Entity.extend({
         this.renderable.setCurrentAnimation("idle");
         
         this.body.setVelocity(5, 20);
+       
+        //* makes the screen (viewport) follow mario's position on both the x and y axis
         me.game.viewport.follow(this.pos, me.game.viewport.AXIS.BOTH);
     },
     
    update: function(delta){
        if(me.input.isKeyPressed("right")) {
+           
+           this.flipX(false);
+           
            this.body.vel.x += this.body.accel.x * me.timer.tick;
            
-       }else{
+       }
+       else if (me.input.isKeyPressed("left")) {
+           this.flipX(true);
+           this.body.vel.x += this.body.accel.x * me.timer.tick;
+            
+       }
+       else{
            this.body.vel.x = 0;
        }
        
@@ -67,6 +78,26 @@ game.LevelTrigger = me.Entity.extend({
         this.body.setCollisionMask(me.collision.types.NO_OBJECT);
         me.levelDirector.loadLevel(this.level);
         me.state.current().resetPlayer(this.xSpawn, this.ySpawn);
+    }
+    
+});
+
+game.Goomba = me.Entity.extend({
+    init: function(x, y, settings){
+        this._super(me.Entity, 'init', [x, y, {
+                image: "Goomba",
+                spritewidth: "60",
+                spriteheight: "28",
+                width: 60,
+                height: 28,
+                getShape: function(){
+                    return (new me.Rect(0, 0, 0, 28)).toPolygon();
+                }
+            }]);
+    },
+    
+    update: function(delta){
+        
     }
     
 });
